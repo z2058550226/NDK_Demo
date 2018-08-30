@@ -73,5 +73,86 @@ void getJavaArrayDirectPointer(JNIEnv *env, jintArray javaArray) {
     env->ReleaseIntArrayElements(javaArray, nativeDirectArray, 0);//将C数组内容复制到java数组，释放本地数组内存。
 }
 
+// 基于C数组提供一个直接引用，以供java程序使用
+jobject newDirectByteBuffer(JNIEnv *env, jintArray javaArray) {
+    unsigned char *buffer = new unsigned char[1024];
+
+    jobject directBuffer;
+    directBuffer = env->NewDirectByteBuffer(buffer, 1024);
+    return directBuffer;
+}
+
+// java程序调用此函数来获取一个本地字节缓存，以供java程序使用
+void getDirectByteBuffer(JNIEnv *env, jobject directBuffer) {
+    unsigned char *buffer;
+    buffer = static_cast<unsigned char *>(env->GetDirectBufferAddress(directBuffer));
+}
+
+// 获取java类的域
+void getField(JNIEnv *env, jobject instance) {
+    jclass clz;
+    clz = env->GetObjectClass(instance);
+
+    // 获取实例域id
+    jfieldID instanceFieldId;
+    instanceFieldId = env->GetFieldID(clz, "instanceField", "Ljava/lang/String;");
+
+    // 获取静态域id
+    jfieldID staticFieldId;
+    staticFieldId = env->GetStaticFieldID(clz, "staticField", "Ljava/lang/String;");
+
+    jstring staticField;
+    staticField = static_cast<jstring>(env->GetStaticObjectField(clz, staticFieldId));
+    // 如果域获取失败都会返回NULL
+    if (staticField != NULL) {
+        // do something...
+    }
+
+    jstring instanceField;
+    instanceField = static_cast<jstring>(env->GetObjectField(instance, instanceFieldId));
+    if (instanceField != NULL) {
+        // do something...
+    }
+}
+
+// 获取Java类方法
+void getMethod(JNIEnv *env, jobject instance) {
+    jclass clazz;
+    clazz = env->GetObjectClass(instance);
+
+    // 获取成员方法id
+    jmethodID instanceMethodId;
+    instanceMethodId = env->GetMethodID(clazz, "instanceMethod", "()Ljava/lang/String;");
+
+    // 获取静态方法id
+    jmethodID staticMethodId;
+    staticMethodId = env->GetStaticMethodID(clazz, "staticMethod", "()Ljava/lang/String;");
+
+    // 调用成员方法
+    jstring instanceMethodResult;
+    instanceMethodResult = static_cast<jstring>(env->CallObjectMethod(instance, instanceMethodId));
+}
+
+// 处理异常
+void handleException(JNIEnv *env, jobject instance) {
+    jclass clazz;
+    clazz = env->GetObjectClass(instance);
+
+    jmethodID throwingMethodId;
+    throwingMethodId = env->GetMethodID(clazz, "throwingMethod", "()V");
+
+    jthrowable ex;
+    env->CallVoidMethod(instance, throwingMethodId);
+    // native代码查询java虚拟机上一行调用的java方法是否有抛出延时异常
+    ex = env->ExceptionOccurred();
+
+    if (0 != ex) {
+        // 发生异常先清理异常。
+        env->ExceptionClear();
+
+        /* 异常的处理 */
+    }
+}
+
 
 #endif //NDK_DEMO_TYPECONVERT_H

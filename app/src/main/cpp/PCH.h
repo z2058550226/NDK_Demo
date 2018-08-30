@@ -12,7 +12,7 @@
 #include <android/log.h>
 #include <stdarg.h>
 
-#define "SuikaJYJNITag" SUIKA_TAG
+#define SUIKA_TAG "SuikaJYJNITag"
 
 using namespace std;
 

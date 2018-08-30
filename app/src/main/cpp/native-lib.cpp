@@ -24,3 +24,12 @@ Java_com_suikajy_ndk_1demo_JNI_nativeEncode(JNIEnv *env, jclass type, jintArray 
     env->ReleaseIntArrayElements(array_, array, 0);
     jintArray javaArray;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_suikajy_ndk_1demo_JavaClass_accessMethods(JNIEnv *env, jobject instance) {
+
+    // TODO
+    log_e("调用accessMethods");
+
+}
