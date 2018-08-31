@@ -1,5 +1,6 @@
 //
 // Created by suikajy on 2018/8/31.
+// 这个DES加密和Java的不同，相同的输入给出的结果是不同的
 //
 
 #ifndef _DES_H_
@@ -16,49 +17,54 @@
 #define PC_1_SIZE 56
 #define BIT_STR_SIZE 64
 
-class DES
-{
+class DES {
 public:
     DES();
+
     ~DES();
 
-    std::string Encrypt(const std::string& plain, const std::string& key);
-    std::string Decrypt(const std::string& cipher, const std::string& key);
+    std::string Encrypt(const std::string &plain, const std::string &key);
+
+    std::string Decrypt(const std::string &cipher, const std::string &key);
 
 private:
     //生成16个子秘钥
-    bool CreateSubKey(const std::string& key, char subKey[SUBKEY_NUM][SUBKEY_LENGHT]);
+    bool CreateSubKey(const std::string &key, char subKey[SUBKEY_NUM][SUBKEY_LENGHT]);
 
     //加密8字节数据块
-    bool EncryptBlock(std::string& block, char subKey[SUBKEY_NUM][SUBKEY_LENGHT]);
+    bool EncryptBlock(std::string &block, char subKey[SUBKEY_NUM][SUBKEY_LENGHT]);
+
     //解密8字节数据块
-    bool DecryptBlock(std::string& block, char subKey[SUBKEY_NUM][SUBKEY_LENGHT]);
+    bool DecryptBlock(std::string &block, char subKey[SUBKEY_NUM][SUBKEY_LENGHT]);
 
 
 private:
     //----------------------------------转换工具-----------------------------------------------
-    bool PC1_Transform(const std::string& bitStr, std::string& PC1BitStr);
+    bool PC1_Transform(const std::string &bitStr, std::string &PC1BitStr);
 
-    bool PC2_Transform(const std::string& PC1BitStr, char subKey[SUBKEY_LENGHT]);
+    bool PC2_Transform(const std::string &PC1BitStr, char subKey[SUBKEY_LENGHT]);
 
-    bool IP_Transform(std::string& bitStr);
+    bool IP_Transform(std::string &bitStr);
 
-    bool Expand_Transform(const std::string& halfBitStr, std::string& eBitStr);
+    bool Expand_Transform(const std::string &halfBitStr, std::string &eBitStr);
 
-    bool SBox_Transform(const std::string& eBitStr, std::string& halfBitStr);
+    bool SBox_Transform(const std::string &eBitStr, std::string &halfBitStr);
 
-    bool Permute_Transform(std::string& halfBitStr);
+    bool Permute_Transform(std::string &halfBitStr);
 
-    bool IP_1_Transform(std::string& bitStr);
+    bool IP_1_Transform(std::string &bitStr);
 
 private:
     //------------------------------------基础工具------------------------------------------------
-    bool Char8ToBit64(const std::string& str, std::string& bitStr);
-    bool Bit64ToChar8(const std::string& bitStr, std::string& str);
+    bool Char8ToBit64(const std::string &str, std::string &bitStr);
 
-    bool XOR(std::string& strFirst, std::string& strSecond, size_t num);
+    bool Bit64ToChar8(const std::string &bitStr, std::string &str);
 
-    bool LeftCycle(std::string& str, size_t beginSection, size_t endSection, size_t step);
+    bool XOR(std::string &strFirst,
+             std::basic_string<char, std::char_traits<char>, std::allocator<char>> strSecond,
+             size_t num);
+
+    bool LeftCycle(std::string &str, size_t beginSection, size_t endSection, size_t step);
 
 private:
     //------------------------------------生成秘钥需要的表----------------------------------------

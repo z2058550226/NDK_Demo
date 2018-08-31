@@ -205,5 +205,31 @@ void weakGlobalRef(JNIEnv *env) {
 
 }
 
+// 同步代码块在native层的等效写法
+void synchronizedBlock(JNIEnv *env, jobject instance) {
+    if (JNI_OK == env->MonitorEnter(instance)) {
+        /* Error handling. */
+    }
+
+    /* Synchronized thread-safe code block. */
+
+    if (JNI_OK == env->MonitorExit(instance)) {
+        /* Error handling. */
+    }
+}
+
+// 本地线程使用示例
+void nativeThread(){
+    JavaVM* cachedJvm;
+    // ...
+    JNIEnv* env;
+    // ...
+    /* Attach the current thread to virtual machine. */
+    cachedJvm->AttachCurrentThread(&env, NULL);
+    /* Thread can communicate with the Java application
+    using the JNIEnv interface. */
+    /* Detach the current thread from virtual machine. */
+    cachedJvm->DetachCurrentThread();
+}
 
 #endif //NDK_DEMO_TYPECONVERT_H

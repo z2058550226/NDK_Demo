@@ -12,6 +12,6 @@ public class JNI {
     public static native String outPutTest(String input);
 
     // 数组转换API Demo
-    public static native int[] nativeEncode(int[] array);
+    public static native String nativeEncode(String oriString);
 
 }

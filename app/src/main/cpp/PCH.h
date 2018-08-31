@@ -11,6 +11,8 @@
 #include <jni.h>
 #include <android/log.h>
 #include <stdarg.h>
+#include "DES.h"
+#include "base_64.h"
 
 #define SUIKA_TAG "SuikaJYJNITag"
 
