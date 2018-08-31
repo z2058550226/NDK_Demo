@@ -13,4 +13,5 @@ public class JNI {
 
     // 数组转换API Demo
     public static native int[] nativeEncode(int[] array);
+
 }

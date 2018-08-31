@@ -154,5 +154,56 @@ void handleException(JNIEnv *env, jobject instance) {
     }
 }
 
+// C层给Java层抛出异常
+void throwException(JNIEnv *env, jobject instance) {
+    jclass clz;
+    clz = env->FindClass("java/lang/NullPointerException");
+
+    if (0 != clz) {
+        env->ThrowNew(clz, "Exception message");
+    }
+
+}
+
+// free 局部引用
+void freeLocalRef(JNIEnv *env, jobject instance) {
+    jclass clz;
+    clz = env->GetObjectClass(instance);
+
+    env->DeleteLocalRef(clz);
+}
+
+// 创建全局引用
+void newGlobalRef(JNIEnv *env) {
+    jclass localClazz;
+    jclass globalClazz;
+    localClazz = env->FindClass("java/lang/String");
+    globalClazz = static_cast<jclass>(env->NewGlobalRef(localClazz));
+    env->DeleteLocalRef(localClazz);
+
+    //删除全局引用
+    env->DeleteGlobalRef(globalClazz);
+}
+
+// 弱全局引用
+void weakGlobalRef(JNIEnv *env) {
+
+    jclass localClazz;
+    localClazz = env->FindClass("java/lang/String");
+    // 创建弱全局引用
+    jclass weakGlobalClazz;
+    weakGlobalClazz = static_cast<jclass>(env->NewWeakGlobalRef(localClazz));
+
+    // 验证弱全局引用是否可用
+    if (JNI_FALSE == env->IsSameObject(weakGlobalClazz, NULL)) {
+        /* Object is still live and can be used. */
+    } else {
+        /* Object is garbage collected and cannot be used. */
+    }
+
+    env->DeleteWeakGlobalRef(weakGlobalClazz);
+
+}
+
 
 #endif //NDK_DEMO_TYPECONVERT_H
