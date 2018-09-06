@@ -14,4 +14,6 @@ public class JNI {
     // 数组转换API Demo
     public static native String nativeEncode(String oriString);
 
+    public static native void posixThread(int a, int b);
+
 }
